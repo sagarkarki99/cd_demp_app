@@ -1,0 +1,35 @@
+import "../../Fastfile"
+
+
+default_platform(:android)
+
+platform :android do
+  desc "Build release apk"
+  lane :buildProdEnv do
+
+    sh_on_root(command: "flutter clean")
+    sh_on_root(command: "flutter pub get")
+    sh_on_root(command: "flutter build apk --release -t main/main_prod.dart")
+  end
+  lane :buildReleaseApk do
+
+    sh_on_root(command: "flutter clean")
+    sh_on_root(command: "flutter pub get")
+    sh_on_root(command: "flutter build apk --release ")
+  end
+  
+  desc "Build"
+  lane :build do 
+    buildReleaseApk
+    firebase_app_distribution(
+      app: "1:54567234535:android:c65e05ebe328c411faeb42",
+      firebase_cli_token: "1//0g2WoMgxkgIokCgYIARAAGBASNwF-L9IrvECzDRqBEpLZvfiux2aTDE2_AC22WNbMZZmmQ8EigEwnukSRvOGOuC9g9wi-B2S5ncQ",
+      android_artifact_path: "#{root_path}/build/app/outputs/flutter-apk/app-release.apk",
+      testers: "sagar.karki@fusemachines.com, sujal.manandhar@fusemachines.com, kushal.rajbhandari@fusemachines.com, nischal.joshi@fusemachines.com, adarsha@fusemachines.com, alisha@fusemachines.com",
+       
+    )
+  end
+
+end
+
+
