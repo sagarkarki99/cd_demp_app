@@ -1,4 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'bloc/demo_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,12 +14,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return BlocProvider(
+      create: (context) => DemoBloc(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const MyHomePage(),
       ),
-      home: const MyHomePage(),
     );
   }
 }
@@ -24,6 +32,26 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: Center(
+        child: BlocBuilder<DemoBloc, DemoState>(
+          builder: (context, state) {
+            if (state is MovieLoaded) {
+              return Text(state.message);
+            }
+            return const Text('No movie');
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          BlocProvider.of<DemoBloc>(context).add(FabButtonPressed(
+            movieId: "Asdfasdfwerwe",
+            name: "Iron man",
+          ));
+        },
+      ),
+    );
   }
 }
