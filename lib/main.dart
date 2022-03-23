@@ -34,13 +34,26 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: BlocBuilder<DemoBloc, DemoState>(
-          builder: (context, state) {
+        child: BlocListener<DemoBloc, DemoState>(
+          listener: (context, state) {
             if (state is MovieLoaded) {
-              return Text(state.message);
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text("New movie came!!!"),
+                  content: Text(state.message),
+                ),
+              );
             }
-            return const Text('No movie');
           },
+          child: BlocBuilder<DemoBloc, DemoState>(
+            builder: (context, state) {
+              if (state is MovieLoaded) {
+                return Text(state.message);
+              }
+              return const Text('No movie');
+            },
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
